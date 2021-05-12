@@ -1,0 +1,5 @@
+personID,cotKeyBeboer,cotKeyKonsoll,cotToken,navn,alder,rom
+1,13254,158,eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI0ODk2In0.uDXPvOeCqQhEr7HlqYoolhRaVh-QzcCaBQIcgRCHHE4,Jonas,25,1
+2,8056,8932,eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI1MDgwIn0.JqLFfCKkjyl_3-LKr2_UIPsu53JuyOw_oiZZ5JX8_n0,Sander,21,2
+3,11150,458,eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI1MTkxIn0.67_wTOsrUBgKMcvhMVi7AS-yFOsJWRrtQzDs9fEu4zM,Ovidius,23,3
+4,29471,1776,eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiI1MjE1In0.pLf4zCRh8J0ZA1MBsp7hIYGJGqSbc93B4e_KAjUNivk,Elias,22,4
