@@ -4,17 +4,9 @@ Created on Fri Apr 23 10:47:00 2021
 
 @author: nygar
 """
-# Kode som JONAS skal ha
-## Jonas, du vil kanskje ta bort linje 123-125 (printlinjer)
-## kan nullstille ved å sette nullstill==1
-## prøvde meg på noe som mest sansynlig ikkje fungere, se linje 109-113 og vurder om det skal fjernes
-### installer pysolar i anaconda prompt ved:  pip3 install pysolar
-### sjekk om installer ved: conda list
-
-
 import requests
 import json
-from pysolar.solar import *
+from pysolar import solar
 import datetime 
 
 def wHgenerertfunct(sekunder, nullstill):
@@ -63,7 +55,7 @@ def wHgenerertfunct(sekunder, nullstill):
     breddegrad = 63.435998
     lengdegrad = 10.427082
     dato = datetime.datetime.now(datetime.timezone.utc)
-    solvinkel = get_altitude(breddegrad, lengdegrad, dato)
+    solvinkel = solar.get_altitude(breddegrad, lengdegrad, dato)
      
     # Ved manuel input av stråling kan disse solvinkelkoeffisientene(sVK1,sVK2) brukes som en forholdsprosent. 
     ## Ved optimalt forhold er solvinkel lik 90 grader og det tilsvarer 100%. 
@@ -86,7 +78,7 @@ def wHgenerertfunct(sekunder, nullstill):
     ## Kollektivets takareal er 70 kvm. Vi vurderer 40 kvm som utnyttbart.
     ## solcellepanelet har en modul effektivitet på 17,7%, kun 17,7% av strålingen kan generes til brukende strøm under optimale forhold.
     ## Antar en ytelsesprosent. Biblioteket tar ikke høyde for utetemperatur eller hvor mye skyer det er. 
-    straaling =  radiation.get_radiation_direct(dato, solvinkel)
+    straaling =  solar.radiation.get_radiation_direct(dato, solvinkel)
     solProsent = 1-(skydekke/100)
     solcellerAreal = 40
     modulEffektivitet = 0.177
@@ -124,11 +116,4 @@ def wHgenerertfunct(sekunder, nullstill):
     # print("Legger til: " + str(effekt) + " wH")
     # print("Solpanelet har generet: " + str(totalEffektProdusert) + " wH")
         
-    return       
-
-                 
-                  
-
-                       
-    
-    
+    return
