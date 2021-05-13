@@ -16,9 +16,6 @@ def getForecast():
     #Ønsket sted for værmelding, ved bruk av kooordinater
     Trondheim = Place("Trondheim", 63.435998, 10.427082, 15)
     Trondheim_forecast = Forecast(Trondheim, USER_AGENT)
-    
-    #Oppretter en tom liste som skal brukes til å sortere 
-    vaerMeldListe = []
     Trondheim_forecast.update()
     
     #Sjekker måling for nåtidens angitte timeintervall. f.eks. mellom 11:00 og 12:00
@@ -45,7 +42,7 @@ def getForecast():
     vaerMeldListe.append(temp)
     vaerMeldListe.append(skydekk)
     
-    #Konverterer 
+    #Konverterer til string 
     temp = str(vaerMeldListe[0]).zfill(2) 
     skyDekk = str(vaerMeldListe[1]).zfill(3)
             
