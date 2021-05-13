@@ -476,9 +476,6 @@ def time_book(screen):
                 if evt.unicode.isalpha():           # making the function not take any alphabetic characters
                     None
 
-                elif evt.unicode:
-                    time += evt.unicode
-
                 elif evt.key == pygame.K_BACKSPACE:
                     if len(time) == 3:
                         time = time[:-2]            # removes first . 
@@ -502,16 +499,18 @@ def time_book(screen):
                     if len(time) > 6:
                         print("LONG")
                         time = "booking lasting too long"
-                        
+                    
 
                     else:
                         
                         if len(time) < 6:
                             for _ in range(6-len(time)):
                                 time = time[:4] + "0" + time[4:]    # making sure there are enough zeroes between the
-                        
-                        
+
                         return time                                 # start time and the minutes
+
+                elif evt.unicode:
+                    time += evt.unicode
 
             elif evt.type == pygame.QUIT:                           # cancel by x-ing out
                 return
@@ -548,12 +547,6 @@ def temp_menu(screen, max_temp):
             if evt.type == pygame.KEYDOWN:
                 if evt.unicode.isalpha():           # making the function not take any alphabetic characters
                     None
-
-                elif evt.unicode:
-                    temp = temp[:len(temp)-1:]
-                    temp += evt.unicode 
-                    temp += "°"
-
                     
 
                 elif evt.key == pygame.K_BACKSPACE:
@@ -574,6 +567,11 @@ def temp_menu(screen, max_temp):
                             for _ in range(max_temp-len(temp)):
                                 temp = "0" + temp    # making sure there are enough zeroes between the
                         return temp                                 # start time and the minutes
+            
+                elif evt.unicode:
+                    temp = temp[:len(temp)-1:]
+                    temp += evt.unicode 
+                    temp += "°"
 
             elif evt.type == pygame.QUIT:           # cancel by x-ing out
                 return
@@ -604,13 +602,7 @@ def guests(screen, guests):
                 if evt.unicode.isalpha():               # making the function not take any alphabetic characters
                     None
 
-                elif evt.unicode:
-                    #guests = guests[:len(guests)-1:]
-                    guests += evt.unicode 
-                    #guests += "°"
 
-                    
-                
                 elif evt.key == pygame.K_BACKSPACE:
                     guests = guests[:-1]                    
 
@@ -619,6 +611,11 @@ def guests(screen, guests):
                             for _ in range(3-len(guests)):
                                 guests = "0" + guests   # making sure there are enough zeroes between the
                         return guests                   # start time and the minutes
+
+                
+                elif evt.unicode:
+                    guests += evt.unicode 
+
                         
 
         # blacking out the screen
