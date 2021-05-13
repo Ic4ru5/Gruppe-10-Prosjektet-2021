@@ -14,8 +14,6 @@ CircusESP32Lib circusESP32(server, ssid, password);
 
 // // // // FUNKSJONER // // // //
 
-// // Setup funksjoner // //
-
 // Setup av internet klokke
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org", 7200, 3600000);
@@ -103,12 +101,12 @@ const byte LDR_SET[] = { 32, 35, 34 };
 
 void lysSetup() {
   const byte INTERRUPT_PINS[] = { 16, 17, 18, 19 }; // interrupt pins; rom 1, 2, 3, 4.
-  const int freq = 5000;
-  const byte resolution = 8;
+  const int FREQ = 5000;
+  const byte RESOLUTION = 8;
 
   for (byte i = 0; i <= 6; i++) {
     pinMode(LED_LIGHTS[i], OUTPUT);
-    ledcSetup(LED_CHANNEL[i], freq, resolution);
+    ledcSetup(LED_CHANNEL[i], FREQ, RESOLUTION);
     ledcAttachPin(LED_LIGHTS[i], LED_CHANNEL[i]);
     if (i <= 2) {
       pinMode(LDR_SET[i], INPUT);
