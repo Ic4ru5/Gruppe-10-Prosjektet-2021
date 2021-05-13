@@ -102,7 +102,7 @@ void loop() {
     }
   }
   if (badTemp > utetemp){
-    digitalWrite[ovn[2], HIGH];
+    digitalWrite(ovn[2], HIGH);
     if(servoPosBad == 45){
       for(servoPosBad = 0; servoPosBad >= 90; servoPosBad -=1);
       badServo.write(servoPosBad);
@@ -142,7 +142,7 @@ void loop() {
   
   if (badTempInt < utetemp){
     if(beboerStatusBad ==1){
-      digitalWrite[ovn[2], LOW];
+      digitalWrite(ovn[2], LOW);
       for (servoPosBad = 0; servoPosBad <= 90; servoPosBad += 1){ 
         badServo.write(servoPosBad);              
         delay(15); 
