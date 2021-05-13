@@ -70,7 +70,7 @@ def wHgenerertfunct(sekunder, nullstill):
     ## For hver grad over- eller under optimal temperatur (25 grader), vil ytelsen synke med 0,4%.
     tempKoef = 0.996
     tempOptimal = 25
-    ytelseTemp = abs((uteTemp-tempOptimal)*tempKoef)/100
+    ytelseTemp = abs((uteTemp-tempOptimal)*tempKoef)/tempOptimal
      
     # Variabler som brukes i regnestykket for effekten som produseres.
     ## Stråling finnes ved hjelp av tidspunkt og solvinkel
@@ -82,12 +82,11 @@ def wHgenerertfunct(sekunder, nullstill):
     solProsent = 1-(skydekke/100)
     solcellerAreal = 40
     modulEffektivitet = 0.177
-    ytelsesForhold = solProsent+ytelseTemp
      
     # Verdien for hver kjøring.
     ## Enheter: [wh]=[m^2]*[%]*[w/m^2]*[%]*[h].
     ## Mulighet for nullstilling.
-    effekt = solcellerAreal*modulEffektivitet*straaling*ytelsesForhold*(sekunder/3600)
+    effekt = solcellerAreal*modulEffektivitet*straaling*ytelseTemp*solProsent*(sekunder/3600)
     if(nullstill==1):
         effekt = 0
     
