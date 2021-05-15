@@ -8,7 +8,7 @@
 
 // Ruter logginn og påkobling til CoT med selvbeskrivende konstanter
 char server[] = "www.circusofthings.com";
-char ssid[] = "SSID";
+char ssid[] = "SSID_NAVN";
 char password[] = "hunter2";
 CircusESP32Lib circusESP32(server, ssid, password);
 
@@ -26,12 +26,10 @@ void wifiKlokke() {
   timeClient.begin();
 }
 
-// Statemaskin for lysene brukt med knapp.
-
 byte lightPower;
-byte lightState[] = { 0, 0, 0, 0 };
-byte previousLightState[] = { 0, 0, 0, 0 };
-byte pressNumb[] = { 0, 0, 0, 0 }; // Array for hvor mange ganger knappet ble trykt for hvert rom.
+volatile byte lightState[] = { 0, 0, 0, 0 };
+volatile byte previousLightState[] = { 0, 0, 0, 0 };
+volatile byte pressNumb[] = { 0, 0, 0, 0 }; // Array for hvor mange ganger knappet ble trykt for hvert rom.
 const byte LED_LIGHTS[] =  { 12, 14, 27, 26, 25, 2, 4 }; // Stue, Kjøkken, Bad, Soverom(3 - 6)
 const byte LED_CHANNEL[] = { 0, 1, 2, 3, 4, 5, 6 }; // kanal for PWM.
 
@@ -42,33 +40,36 @@ enum modusStates {
 };
 
 /**
-	En funksjon brukt for ISR. Endrer statuser til beboerrommene basert på den aktive statusen, og vipper til det motsatte
-	statusen. Om trykt tre ganger blir telleren satt til "0" som er defaultState. Funksjonen halter ikke systemet helt, bare endrer status.
-	byte "a" henvise til beboerromet mens byte "b" er beboerlyset til rommet.
+  En funksjon brukt for ISR. Endrer statuser til beboerrommene basert på den aktive statusen, og vipper til det motsatte
+  statusen. Om trykt tre ganger blir telleren satt til "0" som er defaultState. Funksjonen halter ikke systemet helt, bare endrer status.
+  byte "a" henvise til beboerromet mens byte "b" er beboerlyset til rommet.
 */
 
 void manualOverwrite(byte a, byte b) {
   if (pressNumb[a] <= 1) {
     if ((lightState[a] == enabledState) || (previousLightState[a] == disabledState)) {
+      pressNumb[a] += 1;
       digitalWrite(LED_LIGHTS[b], LOW);
       ledcWrite(LED_CHANNEL[b], 0);
       lightState[a] = disabledState;
       previousLightState[a] = enabledState;
-      pressNumb[a] += 1;
+
     }
     else if ((lightState[a] == disabledState) ||  (previousLightState[a] == enabledState)) {
+      pressNumb[a] += 1;
       digitalWrite(LED_LIGHTS[b], HIGH);
       ledcWrite(LED_CHANNEL[b], 255);
       lightState[a] = enabledState;
       previousLightState[a] = disabledState;
-      pressNumb[a] += 1;
+
     }
   }
   else {
+    pressNumb[a] = 0;
     digitalWrite(LED_LIGHTS[b], lightPower);
     ledcWrite(LED_CHANNEL[b], lightPower);
     lightState[a] = defaultState;
-    pressNumb[a] = 0;
+
   }
 }
 /**
@@ -184,9 +185,10 @@ void lysFunksjon() {
   word constrainedMean = constrain(ldrMean, 0, 800);
   byte ldrPWM = map(constrainedMean, 0, 800, 255, 0);
 
-  /** PWM til lysene blir lav etter at solen har gått ned.
+  /** Lysstyrken avgjøres her ved tid på dagen og styrken på lyste på innsiden,
+    og om sant blir lysene avhengig av skyforhold.
   */
-  if ((tidDag >= 5) && (tidDag <= 21)) {
+  if (((tidDag >= 5) && (tidDag <= 21)) && (constrainedMean >= 400)) {
     /**
       LightPower variabelen etablert med skyForhold variabelen.
       Verdien fra skyForhold blir konvertert til en prosent og multiplisert med maks PWM verdi.
@@ -223,8 +225,8 @@ void lysFunksjon() {
 
 
   /**
-	Løkken oppdatere alle beboerrommene for statusendringer. 
-	Kontrolere og opprettholde manualOverwrite() funksjonen med å sjekke endring av lysstatuser fra ISR funksjonen.
+    Løkken oppdatere alle beboerrommene for statusendringer.
+    Kontrolere og opprettholde manualOverwrite() funksjonen med å sjekke endring av lysstatuser fra ISR funksjonen.
   */
   for (byte a = 0; a <= 3; a++) {
     roomBook[a] = circusESP32.read(cotKeys[a], cotTokens[a]);
@@ -243,7 +245,7 @@ void lysFunksjon() {
     }
     // Etter klokka 23:00 skal alle sove, og da slås alle beboer lysene av. Antatt at alle skal våkne klokken 7.
     if ((tidDag >= 23) && (tidDag <= 7)) {
-      romFunksjon(roomBookState[0], (a + 3));
+      romFunksjon(roomBookState[0], (a + 3)); // +3 fordi romlysene starter fra 4 i arrayen
       previousLightState[a] = disabledState;
     }
     else if (lightState[a] == defaultState) {
